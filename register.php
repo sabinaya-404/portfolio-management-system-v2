@@ -59,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->execute([$email]);
 
         if ($stmt->fetch()) {
-            $errors[] = 'An account with this email address already exists.';
+            $errors[] = 'User with this email already exists, Forget Password?';
         } else {
             $passwordHash = password_hash($password, PASSWORD_DEFAULT);
 
@@ -71,7 +71,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 exit;
             } catch (PDOException $e) {
                 if ($e->getCode() === '23000') {
-                    $errors[] = 'An account with this email address already exists.';
+                    $errors[] = 'User with this email already exists, Forget Password?';
                 } else {
                     $errors[] = 'Unable to complete registration. Please try again later.';
                 }
@@ -88,24 +88,23 @@ $isSuccess = isset($_GET['success']);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register - Portfolio Management System</title>
-    <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
-    <main class="auth-container">
-        <div class="auth-card">
-            <header class="auth-header">
+    <main>
+        <div>
+            <header>
                 <h1>Create Account</h1>
                 <p>Register to manage your portfolio</p>
             </header>
 
             <?php if ($isSuccess): ?>
-                <div class="alert alert-success" role="status">
+                <div role="status">
                     Registration successful! You can now <a href="login.php">log in</a> to your account.
                 </div>
             <?php endif; ?>
 
             <?php if (!empty($errors)): ?>
-                <div class="alert alert-error" role="alert">
+                <div role="alert">
                     <ul>
                         <?php foreach ($errors as $error): ?>
                             <li><?php echo htmlspecialchars($error, ENT_QUOTES, 'UTF-8'); ?></li>
@@ -117,13 +116,12 @@ $isSuccess = isset($_GET['success']);
             <form action="register.php" method="POST" novalidate>
                 <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token'] ?? '', ENT_QUOTES, 'UTF-8'); ?>">
 
-                <div class="form-group">
+                <div>
                     <label for="full_name">Full Name</label>
                     <input
                         type="text"
                         id="full_name"
                         name="full_name"
-                        class="form-control"
                         value="<?php echo htmlspecialchars($fullName, ENT_QUOTES, 'UTF-8'); ?>"
                         required
                         maxlength="100"
@@ -131,13 +129,12 @@ $isSuccess = isset($_GET['success']);
                     >
                 </div>
 
-                <div class="form-group">
+                <div>
                     <label for="email">Email Address</label>
                     <input
                         type="email"
                         id="email"
                         name="email"
-                        class="form-control"
                         value="<?php echo htmlspecialchars($email, ENT_QUOTES, 'UTF-8'); ?>"
                         required
                         maxlength="255"
@@ -145,25 +142,24 @@ $isSuccess = isset($_GET['success']);
                     >
                 </div>
 
-                <div class="form-group">
+                <div>
                     <label for="password">Password</label>
                     <input
                         type="password"
                         id="password"
                         name="password"
-                        class="form-control"
                         required
                         minlength="8"
                         maxlength="16"
                         autocomplete="new-password"
                     >
-                    <small class="form-hint">Must be 8-16 characters with uppercase, lowercase, number, and special character.</small>
+                    <small>Must be 8-16 characters with uppercase, lowercase, number, and special character.</small>
                 </div>
 
-                <button type="submit" class="btn btn-primary">Register</button>
+                <button type="submit">Register</button>
             </form>
 
-            <footer class="auth-footer">
+            <footer>
                 Already have an account? <a href="login.php">Log in</a>
             </footer>
         </div>
