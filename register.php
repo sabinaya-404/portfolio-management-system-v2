@@ -88,23 +88,49 @@ $isSuccess = isset($_GET['success']);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register - Portfolio Management System</title>
+    <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
-    <main>
-        <div>
-            <header>
+    <main class="auth-wrapper">
+        <aside class="auth-sidebar">
+            <div class="auth-sidebar-brand">
+                <div class="brand-badge" aria-hidden="true">PMS</div>
+                <div>
+                    <span class="brand-name">Portfolio Management System</span>
+                    <span class="brand-tag">Record Management V2</span>
+                </div>
+            </div>
+
+            <div class="auth-sidebar-body">
+                <span class="sidebar-kicker">New Account Registration</span>
+                <h2 class="sidebar-title">Organize and document your investments.</h2>
+                <p class="sidebar-desc">Create your local portfolio management account to track stock quantities, total capital invested, and multiple Demat accounts.</p>
+                <ul class="sidebar-features">
+                    <li><span class="feature-bullet" aria-hidden="true"></span> Centralized multi-Demat record management</li>
+                    <li><span class="feature-bullet" aria-hidden="true"></span> Direct investment and quantity calculation</li>
+                    <li><span class="feature-bullet" aria-hidden="true"></span> Private, secure, and password-protected</li>
+                </ul>
+            </div>
+
+            <div class="auth-sidebar-footer">
+                <span>PMS V2 &bull; BCA Academic Project</span>
+            </div>
+        </aside>
+
+        <section class="auth-content">
+            <header class="auth-header">
                 <h1>Create Account</h1>
-                <p>Register to manage your portfolio</p>
+                <p>Register to manage your Demat accounts and holdings.</p>
             </header>
 
             <?php if ($isSuccess): ?>
-                <div role="status">
+                <div class="alert alert-success" role="status">
                     Registration successful! You can now <a href="login.php">log in</a> to your account.
                 </div>
             <?php endif; ?>
 
             <?php if (!empty($errors)): ?>
-                <div role="alert">
+                <div class="alert alert-error" role="alert">
                     <ul>
                         <?php foreach ($errors as $error): ?>
                             <li><?php echo htmlspecialchars($error, ENT_QUOTES, 'UTF-8'); ?></li>
@@ -116,12 +142,13 @@ $isSuccess = isset($_GET['success']);
             <form action="register.php" method="POST" novalidate>
                 <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token'] ?? '', ENT_QUOTES, 'UTF-8'); ?>">
 
-                <div>
+                <div class="form-group">
                     <label for="full_name">Full Name</label>
                     <input
                         type="text"
                         id="full_name"
                         name="full_name"
+                        class="form-control"
                         value="<?php echo htmlspecialchars($fullName, ENT_QUOTES, 'UTF-8'); ?>"
                         required
                         maxlength="100"
@@ -129,12 +156,13 @@ $isSuccess = isset($_GET['success']);
                     >
                 </div>
 
-                <div>
+                <div class="form-group">
                     <label for="email">Email Address</label>
                     <input
                         type="email"
                         id="email"
                         name="email"
+                        class="form-control"
                         value="<?php echo htmlspecialchars($email, ENT_QUOTES, 'UTF-8'); ?>"
                         required
                         maxlength="255"
@@ -142,27 +170,28 @@ $isSuccess = isset($_GET['success']);
                     >
                 </div>
 
-                <div>
+                <div class="form-group">
                     <label for="password">Password</label>
                     <input
                         type="password"
                         id="password"
                         name="password"
+                        class="form-control"
                         required
                         minlength="8"
                         maxlength="16"
                         autocomplete="new-password"
                     >
-                    <small>Must be 8-16 characters with uppercase, lowercase, number, and special character.</small>
+                    <small class="form-hint">Must be 8-16 characters with uppercase, lowercase, number, and special character.</small>
                 </div>
 
-                <button type="submit">Register</button>
+                <button type="submit" class="btn btn-primary">Register</button>
             </form>
 
-            <footer>
+            <footer class="auth-footer">
                 Already have an account? <a href="login.php">Log in</a>
             </footer>
-        </div>
+        </section>
     </main>
 </body>
 </html>

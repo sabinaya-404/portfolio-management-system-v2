@@ -81,17 +81,43 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign In - Portfolio Management System</title>
+    <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
-    <main>
-        <div>
-            <header>
+    <main class="auth-wrapper">
+        <aside class="auth-sidebar">
+            <div class="auth-sidebar-brand">
+                <div class="brand-badge" aria-hidden="true">PMS</div>
+                <div>
+                    <span class="brand-name">Portfolio Management System</span>
+                    <span class="brand-tag">Record Management V2</span>
+                </div>
+            </div>
+
+            <div class="auth-sidebar-body">
+                <span class="sidebar-kicker">Personal Investment Ledger</span>
+                <h2 class="sidebar-title">Track your holdings across Demat accounts.</h2>
+                <p class="sidebar-desc">A focused, distraction-free environment to maintain your stock portfolio records and total invested amounts.</p>
+                <ul class="sidebar-features">
+                    <li><span class="feature-bullet" aria-hidden="true"></span> Manage up to 10 Demat accounts</li>
+                    <li><span class="feature-bullet" aria-hidden="true"></span> Accurate holding and cost recording</li>
+                    <li><span class="feature-bullet" aria-hidden="true"></span> Up-to-date company directory and market news</li>
+                </ul>
+            </div>
+
+            <div class="auth-sidebar-footer">
+                <span>PMS V2 &bull; BCA Academic Project</span>
+            </div>
+        </aside>
+
+        <section class="auth-content">
+            <header class="auth-header">
                 <h1>Sign In</h1>
-                <p>Log in to access your portfolio</p>
+                <p>Enter your credentials to access your Demat portfolio.</p>
             </header>
 
             <?php if (!empty($error)): ?>
-                <div role="alert">
+                <div class="alert alert-error" role="alert">
                     <?php echo htmlspecialchars($error, ENT_QUOTES, 'UTF-8'); ?>
                 </div>
             <?php endif; ?>
@@ -99,12 +125,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <form action="login.php" method="POST" novalidate>
                 <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token'] ?? '', ENT_QUOTES, 'UTF-8'); ?>">
 
-                <div>
+                <div class="form-group">
                     <label for="email">Email Address</label>
                     <input
                         type="email"
                         id="email"
                         name="email"
+                        class="form-control"
                         value="<?php echo htmlspecialchars($email, ENT_QUOTES, 'UTF-8'); ?>"
                         required
                         maxlength="255"
@@ -112,24 +139,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     >
                 </div>
 
-                <div>
+                <div class="form-group">
                     <label for="password">Password</label>
                     <input
                         type="password"
                         id="password"
                         name="password"
+                        class="form-control"
                         required
                         autocomplete="current-password"
                     >
                 </div>
 
-                <button type="submit">Sign In</button>
+                <button type="submit" class="btn btn-primary">Sign In</button>
             </form>
 
-            <footer>
+            <footer class="auth-footer">
                 Don't have an account? <a href="register.php">Register</a>
             </footer>
-        </div>
+        </section>
     </main>
 </body>
 </html>
