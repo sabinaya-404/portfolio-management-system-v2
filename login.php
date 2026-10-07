@@ -95,6 +95,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
 
             <div class="auth-sidebar-body">
+                <!-- Subtle financial illustration -->
+                <div class="sidebar-illustration" aria-hidden="true">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                    </svg>
+                </div>
                 <span class="sidebar-kicker">Personal Investment Ledger</span>
                 <h2 class="sidebar-title">Track your holdings across Demat accounts.</h2>
                 <p class="sidebar-desc">A focused, distraction-free environment to maintain your stock portfolio records and total invested amounts.</p>
@@ -139,7 +145,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     >
                 </div>
 
-                <div class="form-group">
+                <div class="form-group password-toggle">
                     <label for="password">Password</label>
                     <input
                         type="password"
@@ -149,9 +155,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         required
                         autocomplete="current-password"
                     >
+                    <button type="button" class="password-toggle-button" aria-label="Show password">
+                        <svg class="toggle-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <g class="eye-open">
+                                <ellipse cx="12" cy="12" rx="10" ry="6"/>
+                                <circle cx="12" cy="12" r="3"/>
+                            </g>
+                            <g class="eye-closed">
+                                <ellipse cx="12" cy="12" rx="10" ry="6"/>
+                                <circle cx="12" cy="12" r="3"/>
+                                <line x1="5" y1="5" x2="19" y2="19"/>
+                            </g>
+                        </svg>
+                    </button>
                 </div>
 
-                <button type="submit" class="btn btn-primary">Sign In</button>
+                <button type="submit" class="btn btn-primary">
+                    <span class="button-text">Sign In</span>
+                    <span class="spinner" aria-hidden="true"></span>
+                </button>
             </form>
 
             <footer class="auth-footer">
@@ -159,5 +181,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </footer>
         </section>
     </main>
+    <script src="assets/js/auth.js" defer></script>
 </body>
 </html>

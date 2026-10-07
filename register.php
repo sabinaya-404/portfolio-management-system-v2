@@ -102,6 +102,12 @@ $isSuccess = isset($_GET['success']);
             </div>
 
             <div class="auth-sidebar-body">
+                <!-- Subtle financial illustration -->
+                <div class="sidebar-illustration" aria-hidden="true">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                    </svg>
+                </div>
                 <span class="sidebar-kicker">New Account Registration</span>
                 <h2 class="sidebar-title">Organize and document your investments.</h2>
                 <p class="sidebar-desc">Create your local portfolio management account to track stock quantities, total capital invested, and multiple Demat accounts.</p>
@@ -170,7 +176,7 @@ $isSuccess = isset($_GET['success']);
                     >
                 </div>
 
-                <div class="form-group">
+                <div class="form-group password-toggle">
                     <label for="password">Password</label>
                     <input
                         type="password"
@@ -178,14 +184,30 @@ $isSuccess = isset($_GET['success']);
                         name="password"
                         class="form-control"
                         required
+                        autocomplete="new-password"
                         minlength="8"
                         maxlength="16"
-                        autocomplete="new-password"
                     >
+                    <button type="button" class="password-toggle-button" aria-label="Show password">
+                        <svg class="toggle-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <g class="eye-open">
+                                <ellipse cx="12" cy="12" rx="10" ry="6"/>
+                                <circle cx="12" cy="12" r="3"/>
+                            </g>
+                            <g class="eye-closed">
+                                <ellipse cx="12" cy="12" rx="10" ry="6"/>
+                                <circle cx="12" cy="12" r="3"/>
+                                <line x1="5" y1="5" x2="19" y2="19"/>
+                            </g>
+                        </svg>
+                    </button>
                     <small class="form-hint">Must be 8-16 characters with uppercase, lowercase, number, and special character.</small>
                 </div>
 
-                <button type="submit" class="btn btn-primary">Register</button>
+                <button type="submit" class="btn btn-primary">
+                    <span class="button-text">Register</span>
+                    <span class="spinner" aria-hidden="true"></span>
+                </button>
             </form>
 
             <footer class="auth-footer">
@@ -193,5 +215,6 @@ $isSuccess = isset($_GET['success']);
             </footer>
         </section>
     </main>
+    <script src="assets/js/auth.js" defer></script>
 </body>
 </html>
