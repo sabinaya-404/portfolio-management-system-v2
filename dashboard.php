@@ -42,6 +42,13 @@ if ($userId !== null) {
         <nav>
             <a href="my_demat.php">Demat Accounts</a>
             <a href="account.php">Account</a>
+            <?php if (is_admin()): ?>
+                <a href="companies.php">Companies</a>
+                <a href="manage_users.php">Users</a>
+                <a href="news_admin.php">News admin</a>
+            <?php else: ?>
+                <a href="news.php">News</a>
+            <?php endif; ?>
             <a href="logout.php">Logout</a>
         </nav>
     </header>
