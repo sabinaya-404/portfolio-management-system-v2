@@ -35,6 +35,16 @@ No frontend or backend framework is used.
 
 This project is currently being developed as part of a BCA 4th-semester academic project.
 
+## Scheduled News Import
+
+Set `RSS_FEED_URL` in the local `.env` file, then configure Windows Task Scheduler to run this command daily at midnight:
+
+```text
+C:\xampp\php\php.exe C:\xampp\htdocs\portfolio-management-system-v2\scripts\import-news.php
+```
+
+The command imports new entries as pending and skips duplicates. The administrator must publish pending entries from `news_admin.php`.
+
 ## License
 
 This project is developed for academic purposes.
