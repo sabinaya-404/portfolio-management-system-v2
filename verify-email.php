@@ -13,7 +13,8 @@ $stmt->execute([$id]);
 $verif = $stmt->fetch();
 
 $error = '';
-$success = '';
+$success = $_SESSION['registration_success'] ?? '';
+unset($_SESSION['registration_success']);
 
 if (!$verif) {
     $error = 'Invalid or expired verification link.';

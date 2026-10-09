@@ -94,6 +94,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     (isset($_SERVER['MAIL_FROM_ADDRESS']) ? 'true' : 'false'));
                 $emailSent = sendVerificationEmail($email, $code);
                 if ($emailSent) {
+                    $_SESSION['registration_success'] = 'Registration successful. Please check your email for the verification code.';
                     header('Location: verify-email.php?id=' . $verifId);
                     exit;
                 } else {
@@ -110,7 +111,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-$isSuccess = isset($_GET['success']);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -158,12 +158,6 @@ $isSuccess = isset($_GET['success']);
                 <h1>Create Account</h1>
                 <p>Register to manage your Demat accounts and holdings.</p>
             </header>
-
-            <?php if ($isSuccess): ?>
-                <div class="alert alert-success" role="status">
-                    Registration successful! You can now <a href="login.php">log in</a> to your account.
-                </div>
-            <?php endif; ?>
 
             <?php if (!empty($errors)): ?>
                 <div class="alert alert-error" role="alert">
