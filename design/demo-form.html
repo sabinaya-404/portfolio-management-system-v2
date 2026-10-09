@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Component Demo - PMS V2 Design System</title>
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/components/forms.css">
+    <link rel="stylesheet" href="css/components/buttons.css">
+    <link rel="stylesheet" href="css/components/inputs.css">
+</head>
+<body>
+    <div class="container" style="max-width: 600px; margin: 2rem auto; padding: 0 1rem;">
+        <h1>Form Component Demo</h1>
+
+        <form class="form" data-auto-init>
+            <div class="form-group">
+                <label for="name" class="form-label">Full Name</label>
+                <input type="text" id="name" name="name" class="input-field" required placeholder="Enter your full name">
+            </div>
+
+            <div class="form-group">
+                <label for="email" class="form-label">Email Address</label>
+                <input type="email" id="email" name="email" class="input-field" required placeholder="Enter your email">
+            </div>
+
+            <div class="form-group">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" id="password" name="password" class="input-field" required placeholder="Create a password" minlength="8">
+            </div>
+
+            <div class="form-row">
+                <div class="col-1-2">
+                    <div class="form-group">
+                        <label for="age" class="form-label">Age</label>
+                        <input type="number" id="age" name="age" class="input-field" min="18" max="100">
+                    </div>
+                </div>
+                <div class="col-1-2">
+                    <div class="form-group">
+                        <label for="country" class="form-label">Country</label>
+                        <select id="country" name="country" class="input-field">
+                            <option value="">Select Country</option>
+                            <option value="usa">United States</option>
+                            <option value="canada">Canada</option>
+                            <option value="uk">United Kingdom</option>
+                            <option value="india">India</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="newsletter" class="form-label">
+                    <input type="checkbox" id="newsletter" name="newsletter" class="input-field">
+                    Subscribe to newsletter
+                </label>
+            </div>
+
+            <div class="form-actions">
+                <button type="button" class="btn btn-secondary">Cancel</button>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+        </form>
+    </div>
+
+    <script src="js/components.js" type="module"></script>
+</body>
+</html>
