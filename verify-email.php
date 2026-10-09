@@ -3,6 +3,7 @@ require_once __DIR__ . '/includes/auth.php';
 
 $id = $_GET['id'] ?? '';
 if (!preg_match('/^\d+$/', $id)) {
+    $id = '0';
 }
 
 $pdo = require __DIR__ . '/config/database.php';

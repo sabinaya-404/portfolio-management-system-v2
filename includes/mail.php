@@ -53,4 +53,52 @@ function sendVerificationEmail(string $email, string $code): bool
         error_log('Mail error: ' . $mail->ErrorInfo); // Log detailed error for debugging
         return false; // Return generic failure to caller
     }
+
+    function sendPasswordResetEmail(string $email, string $resetUrl): bool
+    {
+        $mail = new PHPMailer(true);
+        try {
+            $mail->isSMTP();
+            $mail->Host = $_ENV['MAIL_HOST'] ?? '';
+            $mail->SMTPAuth = true;
+            $mail->Username = $_ENV['MAIL_USERNAME'] ?? '';
+            $mail->Password = $_ENV['MAIL_PASSWORD'] ?? '';
+            $mail->SMTPSecure = $_ENV['MAIL_ENCRYPTION'] ?? PHPMailer::ENCRYPTION_STARTTLS;
+            $mail->Port = (int)($_ENV['MAIL_PORT'] ?? 587);
+            $mail->setFrom($_ENV['MAIL_FROM_ADDRESS'] ?? '', $_ENV['MAIL_FROM_NAME'] ?? 'Portfolio Management System');
+            $mail->addAddress($email);
+            $mail->isHTML(true);
+            $mail->Subject = 'Password Reset Request';
+            $mail->Body = '<p>A password reset was requested for your account.</p><p><a href="' . htmlspecialchars($resetUrl, ENT_QUOTES, 'UTF-8') . '">Reset your password</a></p><p>This link expires in 30 minutes.</p>';
+            $mail->send();
+            return true;
+        } catch (Exception $exception) {
+            error_log('Mail error: ' . $mail->ErrorInfo);
+            return false;
+        }
+    }
+
+    function sendEmailChangeVerification(string $email, string $code): bool
+    {
+        $mail = new PHPMailer(true);
+        try {
+            $mail->isSMTP();
+            $mail->Host = $_ENV['MAIL_HOST'] ?? '';
+            $mail->SMTPAuth = true;
+            $mail->Username = $_ENV['MAIL_USERNAME'] ?? '';
+            $mail->Password = $_ENV['MAIL_PASSWORD'] ?? '';
+            $mail->SMTPSecure = $_ENV['MAIL_ENCRYPTION'] ?? PHPMailer::ENCRYPTION_STARTTLS;
+            $mail->Port = (int)($_ENV['MAIL_PORT'] ?? 587);
+            $mail->setFrom($_ENV['MAIL_FROM_ADDRESS'] ?? '', $_ENV['MAIL_FROM_NAME'] ?? 'Portfolio Management System');
+            $mail->addAddress($email);
+            $mail->isHTML(true);
+            $mail->Subject = 'Confirm Your New Email Address';
+            $mail->Body = '<p>Your email verification code is: <strong>' . htmlspecialchars($code, ENT_QUOTES, 'UTF-8') . '</strong></p><p>This code expires in 10 minutes.</p>';
+            $mail->send();
+            return true;
+        } catch (Exception $exception) {
+            error_log('Mail error: ' . $mail->ErrorInfo);
+            return false;
+        }
+    }
 }

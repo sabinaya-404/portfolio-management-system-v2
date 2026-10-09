@@ -180,6 +180,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </form>
 
             <footer class="auth-footer">
+                <a href="forgot-password.php">Forgot password?</a><br>
                 Don't have an account? <a href="register.php">Register</a>
             </footer>
         </section>

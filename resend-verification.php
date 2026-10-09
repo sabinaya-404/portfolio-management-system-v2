@@ -125,7 +125,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $idGet = $_GET['id'] ?? '';
         if ($idGet && preg_match('/^\d+$/', $idGet)) {
             $pdo = require __DIR__ . '/config/database.php';
-            $stmt = $pdo->prepare('SELECT user_id, failed_attempts, created_at FROM email_verifications WHERE id = ?');
+            $stmt = $pdo->prepare('SELECT user_id, failed_attempts, created_at, expires_at FROM email_verifications WHERE id = ?');
             $stmt->execute([$idGet]);
             $row = $stmt->fetch();
             if ($row) {
