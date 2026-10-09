@@ -1,4 +1,13 @@
 <?php
+use Dotenv\Dotenv;
+
+require_once __DIR__ . '/../vendor/autoload.php';
+
+$dotenv = Dotenv::createImmutable(__DIR__ . '/../');
+try {
+    $dotenv->load();
+} catch (Exception $e) {
+}
 $host = $_ENV['DB_HOST'] ?? 'localhost';
 $dbname = $_ENV['DB_NAME'] ?? 'pms_v2';
 $username = $_ENV['DB_USER'] ?? 'root';

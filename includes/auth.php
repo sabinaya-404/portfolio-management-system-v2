@@ -37,7 +37,7 @@ function is_admin(): bool {
 
 function require_login(): void {
     if (!is_logged_in()) {
-        header("Location: /login.php");
+        header("Location: login.php");
         exit;
     }
 }
@@ -46,7 +46,7 @@ function require_role(string $required_role): void {
     require_login();
 
     if (!has_role($required_role)) {
-        header("Location: /dashboard.php");
+        header("Location: dashboard.php");
         exit;
     }
 }
@@ -66,6 +66,6 @@ function logout(): void {
         );
     }
     session_destroy();
-    header("Location: /login.php");
+    header("Location: login.php");
     exit;
 }

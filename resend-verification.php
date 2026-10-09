@@ -1,12 +1,6 @@
 <?php
 require_once __DIR__ . '/includes/auth.php';
 require_once __DIR__ . '/includes/mail.php';
-
-//if (is_logged_in()) {
-  //  header('Location: dashboard.php');
-    //exit;
-//}
-
 $userId = null;
 $verifId = null;
 $error = '';
@@ -72,10 +66,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Generate new code
             $code = random_int(100000, 999999);
             $codeHash = hash('sha256', (string)$code);
-
-            // Determine if we should update existing row or insert new
-            // If we have a verifId from GET (non-logged-in case), we can update that row to keep the same link
-            // Otherwise, we delete existing rows and insert a new one.
             if ($verifId !== null) {
                 // Update the existing row
                 $updateStmt = $pdo->prepare('UPDATE email_verifications SET code_hash = ?, failed_attempts = 0, expires_at = DATE_ADD(NOW(), INTERVAL 10 MINUTE) WHERE id = ?');
@@ -109,9 +99,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 } else {
-    // GET request: show a form to confirm resend? We'll just show a message and a button to resend.
-    // We'll determine if we can resend based on login status or GET id.
-    // We'll also show rate limiting info if applicable.
     if (is_logged_in()) {
         $userId = get_current_user_id();
         if ($userId !== null) {
