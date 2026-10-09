@@ -58,7 +58,8 @@ CREATE TABLE holdings (
     holding_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     demat_id INT UNSIGNED NOT NULL,
     company_id INT UNSIGNED NOT NULL,
-    quantity DECIMAL(20,4) NOT NULL CHECK (quantity > 0),  -- Ensures positive quantity
+    quantity DECIMAL(20,4) NOT NULL CHECK (quantity > 0),
+    purchase_price DECIMAL(20,2) NOT NULL CHECK (purchase_price > 0),
     total_investment DECIMAL(20,2) NOT NULL CHECK (total_investment > 0),
 
     UNIQUE KEY uq_holding_demat_company (demat_id, company_id),
