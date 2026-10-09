@@ -35,6 +35,7 @@ CREATE TABLE demat_accounts (
     account_nickname VARCHAR(100) NOT NULL,
     account_holder_name VARCHAR(100) NOT NULL,
     dp_broker_name VARCHAR(150) NOT NULL,
+    dp_broker_number VARCHAR(100) NOT NULL,
     boid VARCHAR(16) NOT NULL UNIQUE,  -- Ensures leading zeros are preserved
 
     CONSTRAINT fk_demat_user
