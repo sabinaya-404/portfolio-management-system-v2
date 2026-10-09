@@ -10,6 +10,7 @@ $error = '';
 $email = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // CSRF validation at the top of POST block
     if (!validate_csrf_token($_POST['csrf_token'] ?? null)) {
         $error = 'Invalid security token. Please refresh and try again.';
     } else {
@@ -37,15 +38,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 if ($isLocked) {
                     $error = 'Your account is temporarily locked due to too many failed login attempts. Please try again later.';
                 } else {
-                    if (password_verify($password, $user['password_hash'])) {
-                        if ($user['account_status'] !== 'active') {
-                            $error = 'Your account has been disabled. Please contact an administrator.';
-                        } else {
+                    // AUTH-001 Fix: Check account status before password verification to prevent timing attacks
+                    if ($user['account_status'] !== 'active') {
+                        $error = 'Your account has been disabled. Please contact an administrator.';
+                    } else {
+                        if (password_verify($password, $user['password_hash'])) {
                             if ((int)$user['failed_login_attempts'] > 0 || $user['locked_until'] !== null) {
                                 $resetStmt = $pdo->prepare('UPDATE users SET failed_login_attempts = 0, locked_until = NULL WHERE user_id = ?');
                                 $resetStmt->execute([$user['user_id']]);
                             }
 
+                            // Sess-001 Fix: Regenerate session ID before setting session variables to prevent fixation
                             session_regenerate_id(true);
                             $_SESSION['user_id'] = (int)$user['user_id'];
                             $_SESSION['user_name'] = $user['full_name'];
@@ -53,20 +56,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                             header('Location: dashboard.php');
                             exit;
-                        }
-                    } else {
-                        $hadExpiredLockout = !empty($user['locked_until']) && strtotime($user['locked_until']) <= $now;
-                        $attempts = $hadExpiredLockout ? 1 : (int)$user['failed_login_attempts'] + 1;
-
-                        if ($attempts >= 5) {
-                            $lockedUntil = date('Y-m-d H:i:s', $now + 20 * 60);
-                            $lockStmt = $pdo->prepare('UPDATE users SET failed_login_attempts = ?, locked_until = ? WHERE user_id = ?');
-                            $lockStmt->execute([$attempts, $lockedUntil, $user['user_id']]);
-                            $error = 'Your account is temporarily locked due to too many failed login attempts. Please try again later.';
                         } else {
-                            $updateStmt = $pdo->prepare('UPDATE users SET failed_login_attempts = ?, locked_until = NULL WHERE user_id = ?');
-                            $updateStmt->execute([$attempts, $user['user_id']]);
-                            $error = 'Invalid email or password.';
+                            $hadExpiredLockout = !empty($user['locked_until']) && strtotime($user['locked_until']) <= $now;
+                            $attempts = $hadExpiredLockout ? 1 : (int)$user['failed_login_attempts'] + 1;
+
+                            if ($attempts >= 5) {
+                                $lockedUntil = date('Y-m-d H:i:s', $now + 20 * 60);
+                                $lockStmt = $pdo->prepare('UPDATE users SET failed_login_attempts = ?, locked_until = ? WHERE user_id = ?');
+                                $lockStmt->execute([$attempts, $lockedUntil, $user['user_id']]);
+                                $error = 'Your account is temporarily locked due to too many failed login attempts. Please try again later.';
+                            } else {
+                                $updateStmt = $pdo->prepare('UPDATE users SET failed_login_attempts = ?, locked_until = NULL WHERE user_id = ?');
+                                $updateStmt->execute([$attempts, $user['user_id']]);
+                                $error = 'Invalid email or password.';
+                            }
                         }
                     }
                 }

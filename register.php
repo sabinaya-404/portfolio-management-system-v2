@@ -1,12 +1,14 @@
 <?php
 require_once __DIR__ . '/includes/auth.php';
+require_once __DIR__ . '/includes/mail.php';
 
 if (is_logged_in()) {
-    header('Location: dashboard.php');
+   header('Location: dashboard.php');
     exit;
 }
 
 $errors = [];
+$emailExistsError = 'User with this email already exists, Forget Password?';
 $fullName = '';
 $email = '';
 
@@ -21,8 +23,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($fullName === '') {
         $errors[] = 'Full name is required.';
-    } elseif (!preg_match('/^[a-zA-Z\s]+$/', $fullName)) {
-        $errors[] = 'Full name can only contain letters and spaces.';
+    } elseif (!preg_match('/^[\p{L}\s\'-]+$/u', $fullName)) { // REG-001 Fix: Unicode-aware regex for international names
+        $errors[] = 'Full name can only contain letters, spaces, hyphens, and apostrophes.';
     } elseif (strlen($fullName) > 100) {
         $errors[] = 'Full name cannot exceed 100 characters.';
     }
@@ -59,7 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->execute([$email]);
 
         if ($stmt->fetch()) {
-            $errors[] = 'User with this email already exists, Forget Password?';
+            $errors[] = $emailExistsError;
         } else {
             $passwordHash = password_hash($password, PASSWORD_DEFAULT);
 
@@ -67,11 +69,39 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $insertStmt = $pdo->prepare('INSERT INTO users (full_name, email, password_hash, role) VALUES (?, ?, ?, "user")');
                 $insertStmt->execute([$fullName, $email, $passwordHash]);
 
-                header('Location: register.php?success=1');
-                exit;
+                $userId = $pdo->lastInsertId();
+
+                // Generate verification code
+                $code = random_int(100000, 999999);
+                $codeHash = hash('sha256', (string)$code);
+
+                // Invalidate any existing verification codes for this user
+                $deleteStmt = $pdo->prepare('DELETE FROM email_verifications WHERE user_id = ?');
+                $deleteStmt->execute([$userId]);
+
+                // Store the verification code hash
+                $insertVerifStmt = $pdo->prepare('INSERT INTO email_verifications (user_id, code_hash, failed_attempts, expires_at) VALUES (?, ?, 0, DATE_ADD(NOW(), INTERVAL 10 MINUTE))');
+                $insertVerifStmt->execute([$userId, $codeHash]);
+
+                $verifId = $pdo->lastInsertId();
+
+                // Send verification email
+                error_log('MAIL_FROM_ADDRESS diagnostics: _ENV set=' .
+                    (isset($_ENV['MAIL_FROM_ADDRESS']) ? 'true' : 'false') .
+                    ', _ENV value=' .
+                    (isset($_ENV['MAIL_FROM_ADDRESS']) ? $_ENV['MAIL_FROM_ADDRESS'] : 'null') .
+                    ', _SERVER set=' .
+                    (isset($_SERVER['MAIL_FROM_ADDRESS']) ? 'true' : 'false'));
+                $emailSent = sendVerificationEmail($email, $code);
+                if ($emailSent) {
+                    header('Location: verify-email.php?id=' . $verifId);
+                    exit;
+                } else {
+                    $errors[] = 'Failed to send verification email. Please try again.';
+                }
             } catch (PDOException $e) {
                 if ($e->getCode() === '23000') {
-                    $errors[] = 'User with this email already exists, Forget Password?';
+                    $errors[] = $emailExistsError;
                 } else {
                     $errors[] = 'Unable to complete registration. Please try again later.';
                 }
