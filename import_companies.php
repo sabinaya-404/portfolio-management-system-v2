@@ -8,7 +8,7 @@ $errors = [];
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!validate_csrf_token($_POST['csrf_token'] ?? null)) {
         $errors[] = 'Invalid security token. Please refresh and try again.';
-    } elseif (!isset($_FILES['csv']) || $_FILES['csv']['error'] !== UPLOAD_ERR_OK || $_FILES['csv']['size'] > 2000000) {
+    } elseif (!isset($_FILES['csv']) || $_FILES['csv']['error'] !== UPLOAD_ERR_OK || $_FILES['csv']['size'] > 2000000 || strtolower(pathinfo($_FILES['csv']['name'], PATHINFO_EXTENSION)) !== 'csv') {
         $errors[] = 'Upload a CSV file smaller than 2 MB.';
     } else {
         $handle = fopen($_FILES['csv']['tmp_name'], 'rb');

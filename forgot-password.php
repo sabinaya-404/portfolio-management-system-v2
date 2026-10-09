@@ -29,7 +29,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $pdo->prepare('DELETE FROM password_resets WHERE user_id = ?')->execute([$user['user_id']]);
                 $resetStmt = $pdo->prepare('INSERT INTO password_resets (user_id, token_hash, expires_at) VALUES (?, ?, DATE_ADD(NOW(), INTERVAL 30 MINUTE))');
                 $resetStmt->execute([$user['user_id'], $tokenHash]);
-                $resetUrl = 'http://' . ($_SERVER['HTTP_HOST'] ?? 'localhost') . rtrim(dirname($_SERVER['SCRIPT_NAME']), '/\\') . '/reset-password.php?token=' . urlencode($token);
+                $scheme = (!empty($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) !== 'off') ? 'https' : 'http';
+                $resetUrl = $scheme . '://' . ($_SERVER['HTTP_HOST'] ?? 'localhost') . rtrim(dirname($_SERVER['SCRIPT_NAME']), '/\\') . '/reset-password.php?token=' . urlencode($token);
                 require_once __DIR__ . '/includes/mail.php';
                 sendPasswordResetEmail($user['email'], $resetUrl);
             }
