@@ -46,6 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !$error) {
                 $deleteStmt->execute([$id]);
 
                 // Log the user in
+                session_regenerate_id(true);
                 $_SESSION['user_id'] = (int)$verif['user_id'];
                 $_SESSION['user_name'] = $verif['full_name'];
                 $_SESSION['role'] = $verif['role'];
